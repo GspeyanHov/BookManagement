@@ -1,11 +1,51 @@
 package books.storage;
 
 import books.model.Book;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class BookStorage {
 
     private static Book[] array = new Book[10];
     private static int size = 0;
+
+    public static void downloadBookExcel(String fileDir) throws IOException {
+        File directory = new File(fileDir);
+        if(directory.isFile()){
+            throw new RuntimeException("fileDir must be a directory ");
+        }
+        File excelFile = new File(fileDir,"books " + System.currentTimeMillis() + ".xlsx");
+        excelFile.createNewFile();
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("book");
+        Row headerRow = sheet.createRow(0);
+        Cell titleCell = headerRow.createCell(0);
+        titleCell.setCellValue("title");
+        Cell authorCell = headerRow.createCell(1);
+        authorCell.setCellValue("author");
+        Cell priceCell = headerRow.createCell(2);
+        priceCell.setCellValue("price");
+        Cell countCell = headerRow.createCell(3);
+        countCell.setCellValue("count");
+        Cell genreCell = headerRow.createCell(4);
+        genreCell.setCellValue("genre");
+
+        for (int i = 0; i < size; i++) {
+            Book book = array[i];
+            Row row = sheet.createRow(i + 1);
+            row.createCell(0).setCellValue(book.getTitle());
+            row.createCell(1).setCellValue(String.valueOf(book.getAuthor()));
+            row.createCell(2).setCellValue(book.getPrice());
+            row.createCell(3).setCellValue(book.getCount());
+            row.createCell(4).setCellValue(book.getGenre());
+        }
+        workbook.write(new FileOutputStream(excelFile));
+        System.out.println("file successfully created ");
+    }
 
     public void printBookByAuthorName(String name, String surName){
         boolean exists = false;

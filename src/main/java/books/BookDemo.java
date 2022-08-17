@@ -9,6 +9,7 @@ import books.storage.BookStorage;
 import books.storage.UserStorage;
 
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -92,6 +93,9 @@ public class BookDemo implements Command {
                 case PRINT_ALL_AUTHORS:
                     authorStorage.printArray();
                     break;
+                case DOWNLOAD_BOOKS_EXCEL:
+                    downloadBookExcel();
+                    break;
                 default:
                     System.out.println("Invalid command! ");
                     break;
@@ -143,10 +147,23 @@ public class BookDemo implements Command {
                 case PRINT_ALL_AUTHORS:
                     authorStorage.printArray();
                     break;
+                case DOWNLOAD_BOOKS_EXCEL:
+                    downloadBookExcel();
+                    break;
                 default:
                     System.out.println("Invalid command! ");
                     break;
             }
+        }
+    }
+
+    private static void downloadBookExcel() {
+        System.out.println("Please input file location ");
+        String fileDir = scanner.nextLine();
+        try {
+            BookStorage.downloadBookExcel(fileDir);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
